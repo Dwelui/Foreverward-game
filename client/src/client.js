@@ -56,7 +56,7 @@ function calculateAvgFps(delta) {
  */
 function updateScene(delta) {
     const avgFps = calculateAvgFps(delta);
-    console.log(`fps: ${avgFps.toFixed(1)}`);
+    console.log(`fps: ${avgFps.toFixed(0)}`);
 
     if (resizeRendererToDisplaySize(renderer)) {
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -68,7 +68,7 @@ function updateScene(delta) {
     renderer.render(scene, camera);
 }
 
-const targetFps = 250;
+const targetFps = 30;
 const targetFrameDuration = 1 / targetFps;
 let previousFrameTime = 0;
 
