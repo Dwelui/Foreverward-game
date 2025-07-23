@@ -13,9 +13,6 @@ scene.add(cube);
 
 camera.position.z = 5;
 
-let previousFrameTime = 0.0;
-
-
 /**
  * @param {THREE.WebGLRenderer} renderer
  *
@@ -35,23 +32,55 @@ function resizeRendererToDisplaySize(renderer) {
     return needResize;
 }
 
-/** @param {number} frameTime */
-function render(frameTime) {
-    frameTime *= 0.001; //convert to seconds.
-    console.log(`frameTime ${frameTime}`);
+const fpsSamples = [];
+const maxSamples = 60;
 
-    const delta = frameTime - previousFrameTime;
-    previousFrameTime = frameTime;
-    console.log(`delta: ${delta}`);
+/**
+ * @param {number} delta - should be in milliseconds.
+ *
+ * @returns {number}
+ */
+function calculateAvgFps(delta) {
+    const fps = 1 / delta;
+    fpsSamples.push(fps);
+
+    if (fpsSamples.length > maxSamples) {
+        fpsSamples.shift();
+    }
+
+    return fpsSamples.reduce((a, b) => a + b) / fpsSamples.length;
+}
+
+/**
+ * @param {number} delta - in seconds.
+ */
+function updateScene(delta) {
+    const avgFps = calculateAvgFps(delta);
+    console.log(`fps: ${avgFps.toFixed(1)}`);
 
     if (resizeRendererToDisplaySize(renderer)) {
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
         camera.updateProjectionMatrix();
     }
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    cube.rotation.x += 1 * delta; // redians per second.
+    cube.rotation.y += 1 * delta;
     renderer.render(scene, camera);
+}
+
+const targetFps = 250;
+const targetFrameDuration = 1 / targetFps;
+let previousFrameTime = 0;
+
+/** @param {number} currentFrameTime */
+function render(currentFrameTime) {
+    currentFrameTime *= 0.001; // in seconds.
+
+    const realFrameDuration = currentFrameTime - previousFrameTime;
+    if (realFrameDuration >= targetFrameDuration) {
+        previousFrameTime = currentFrameTime;
+        updateScene(realFrameDuration);
+    }
 
     requestAnimationFrame(render);
 }
