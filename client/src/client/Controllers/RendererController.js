@@ -71,10 +71,6 @@ export default class RendererController {
      * @param {number} delta - in seconds.
      */
     #updateGameTick(delta) {
-        // TODO: Move to FpsController with sharedState
-        // const avgFps = calculateAvgFps(delta);
-        // sharedState.fps = avgFps.toFixed(0);
-
         if (this.#resizeRendererToDisplaySize()) {
             this.#camera.aspect = this.#canvas.clientWidth / this.#canvas.clientHeight;
             this.#camera.updateProjectionMatrix();

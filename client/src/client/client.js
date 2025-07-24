@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import RendererController from './Controllers/RendererController';
+import FpsCounterController from './Controllers/FpsCounterController';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -15,32 +16,14 @@ scene.add(cube);
 
 camera.position.z = 5;
 
+const fpsCounterInstance = new FpsCounterController();
 rendererInstance.setAnimationLoop((delta) => {
-    console.log(delta);
+    fpsCounterInstance.calculate(delta);
+
     cube.rotation.x += 1 * delta; // radians per second.
     cube.rotation.y += 1 * delta;
 });
 
 rendererInstance.render();
 
-//const fpsSamples = [];
-//const maxSamples = 60;
 
-/**
- * @param {number} delta - should be in milliseconds.
- *
- * @returns {number}
- */
-
-/*
-function calculateAvgFps(delta) {
-    const fps = 1 / delta;
-    fpsSamples.push(fps);
-
-    if (fpsSamples.length > maxSamples) {
-        fpsSamples.shift();
-    }
-
-    return fpsSamples.reduce((a, b) => a + b) / fpsSamples.length;
-}
-*/
