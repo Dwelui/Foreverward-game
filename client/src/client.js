@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { sharedState } from './sharedState';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -56,14 +57,14 @@ function calculateAvgFps(delta) {
  */
 function updateScene(delta) {
     const avgFps = calculateAvgFps(delta);
-    console.log(`fps: ${avgFps.toFixed(0)}`);
+    sharedState.fps = avgFps.toFixed(0);
 
     if (resizeRendererToDisplaySize(renderer)) {
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
         camera.updateProjectionMatrix();
     }
 
-    cube.rotation.x += 1 * delta; // redians per second.
+    cube.rotation.x += 1 * delta; // radians per second.
     cube.rotation.y += 1 * delta;
     renderer.render(scene, camera);
 }
