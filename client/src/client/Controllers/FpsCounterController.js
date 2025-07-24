@@ -2,10 +2,15 @@ import { sharedState } from "../../sharedState";
 
 export default class FpsCounterController {
     /** @type {number} */
-    #maxSamples = 60;
+    #maxSamplesCount = 60;
 
     /** @type {number[]} */
     #fpsSamples = [];
+
+    /** @type {number} */
+    setMaxSamplesCount(maxSamples) {
+        this.#maxSamplesCount = maxSamples;
+    }
 
     /**
      * Calculate average framerate and set sharedState.
@@ -18,7 +23,7 @@ export default class FpsCounterController {
         const fps = 1 / delta;
         this.#fpsSamples.push(fps);
 
-        if (this.#fpsSamples.length > this.#maxSamples) {
+        if (this.#fpsSamples.length > this.#maxSamplesCount) {
             this.#fpsSamples.shift();
         }
 

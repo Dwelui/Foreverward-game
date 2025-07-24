@@ -47,6 +47,11 @@ export default class RendererController {
         this.#animationLoop = animationLoop;
     }
 
+    /** @param {number} targetFps */
+    setTargetFps(targetFps) {
+        this.#targetFps = targetFps;
+    }
+
     /**
      * Start animation loop for ever browser animation tick.
      *

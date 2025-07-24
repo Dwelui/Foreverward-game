@@ -25,5 +25,3 @@ rendererInstance.setAnimationLoop((delta) => {
 });
 
 rendererInstance.render();
-
-
