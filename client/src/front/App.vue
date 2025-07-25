@@ -1,5 +1,5 @@
 <script setup>
-import { sharedState } from '../sharedState.js';
+import { sharedState } from '../sharedState';
 </script>
 
 <template>
