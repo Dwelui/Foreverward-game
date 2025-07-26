@@ -1,30 +1,25 @@
 import * as THREE from 'three';
 
 export default class RendererController {
-    #renderer: THREE.WebGLRenderer;
     #canvas: HTMLCanvasElement;
-    #camera: THREE.PerspectiveCamera | null = null;
-    #scene: THREE.Scene | null = null;
+    #camera: THREE.PerspectiveCamera;
+    #scene: THREE.Scene;
+    #renderer: THREE.WebGLRenderer;
     #animationLoop: CallableFunction | null = null;
     #targetFps: number = 30;
     #previousFrameTime: number = 0;
 
     constructor(
-        canvasElementName: string,
+        canvas: HTMLCanvasElement,
+        camera: THREE.PerspectiveCamera,
+        scene: THREE.Scene
     ) {
-        const canvas = document.querySelector(canvasElementName);
-        if (canvas instanceof HTMLCanvasElement) {
-            this.#canvas = canvas;
-        } else {
-            throw new Error(`Canvas element not found using ${canvasElementName} name.`);
-        }
+        this.#canvas = canvas;
+        this.#camera = camera;
+        this.#scene = scene;
 
         this.#renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
     }
-
-    set camera(camera: THREE.PerspectiveCamera) { this.#camera = camera; }
-
-    set scene(scene: THREE.Scene) { this.#scene = scene; }
 
     set animationLoop(animationLoop: CallableFunction) { this.#animationLoop = animationLoop; }
 
@@ -52,7 +47,7 @@ export default class RendererController {
      * @param delta - in seconds.
      */
     #updateGameTick(delta: number) {
-        if (this.#resizeRendererToDisplaySize() && this.#camera) {
+        if (this.#resizeRendererToDisplaySize()) {
             this.#camera.aspect = this.#canvas.clientWidth / this.#canvas.clientHeight;
             this.#camera.updateProjectionMatrix();
         }
@@ -63,11 +58,7 @@ export default class RendererController {
             console.log(`WARNING::RendererController::Animation loop is not set.`);
         }
 
-        if (this.#scene && this.#camera) {
-            this.#renderer.render(this.#scene, this.#camera);
-        } else {
-            console.log(`WARNING::RendererController::Camera or Scene is not set.`);
-        }
+        this.#renderer.render(this.#scene, this.#camera);
     }
 
     /**
