@@ -40,7 +40,6 @@ function pointerLockChangeHandle() {
 }
 
 const rendererInstance = new RendererController(canvas, camera, scene);
-rendererInstance.targetFps = 30;
 
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
@@ -50,7 +49,7 @@ scene.add(cube);
 camera.position.z = 5;
 
 const fpsCounterInstance = new FpsCounterController();
-rendererInstance.animationLoop = (delta: number) => {
+const gameLoop = (delta: number) => {
     fpsCounterInstance.calculate(delta);
 
     cameraControlsIntance.update(); // INFO: might want to move camera update to browser update time.
@@ -59,4 +58,5 @@ rendererInstance.animationLoop = (delta: number) => {
     cube.rotation.y += 1 * delta;
 };
 
+rendererInstance.setAnimationLoop(gameLoop);
 rendererInstance.render();

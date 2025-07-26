@@ -4,12 +4,22 @@ export default class FpsCounterController {
     #maxSamplesCount: number = 60;
     #fpsSamples: number[] = [];
 
-    get maxSamplesCount() { return this.#maxSamplesCount; }
-    set maxSamplesCount(count: number) {
+    getMaxSamplesCount() { return this.#maxSamplesCount; }
+
+    /**
+     * Set max sample count used for averaging fps.
+     *
+     * @param count - Value must be positive. Default value is 60.
+     *
+     * @returns Returns false if range is not respected.
+     */
+    setMaxSamplesCount(count: number): boolean {
         if (count <= 0) {
-            throw new Error("maxSamplesCount must be positive number.");
+            return false;
         }
+
         this.#maxSamplesCount = count;
+        return true;
     }
 
     /**

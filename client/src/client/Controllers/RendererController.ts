@@ -21,9 +21,27 @@ export default class RendererController {
         this.#renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
     }
 
-    set animationLoop(animationLoop: CallableFunction) { this.#animationLoop = animationLoop; }
+    /**
+     * Set animation loop that will be called each game tick.
+     */
+    setAnimationLoop(animationLoop: CallableFunction) { this.#animationLoop = animationLoop; }
 
-    set targetFps(targetFps: number) { this.#targetFps = targetFps; }
+
+    /**
+     * Set target fps for game tick target.
+     *
+     * @param targetFps - Value must be positive. Default value is 30.
+     *
+     * @returns Returns false if range is not respected.
+     */
+    setTargetFps(targetFps: number): boolean {
+        if (targetFps <= 0) {
+            return false;
+        }
+
+        this.#targetFps = targetFps;
+        return true;
+    }
 
     /**
      * Start animation loop for ever browser animation tick.
