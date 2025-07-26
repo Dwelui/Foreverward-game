@@ -29,7 +29,7 @@ document.addEventListener("pointerlockchange", pointerLockChangeHandle, true);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const cameraControlsIntance = new CameraControlsController(camera);
-cameraControlsIntance.setSensitivity(100);
+cameraControlsIntance.setSensitivity(10);
 
 function pointerLockChangeHandle() {
     if (document.pointerLockElement === canvas) {
@@ -41,6 +41,7 @@ function pointerLockChangeHandle() {
 
 const scene = new THREE.Scene();
 const rendererInstance = new RendererController(canvas, camera, scene);
+rendererInstance.setTargetFps(160);
 
 new SampleStaticScene(scene);
 
