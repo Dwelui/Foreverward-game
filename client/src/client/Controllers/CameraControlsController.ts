@@ -2,10 +2,10 @@ import * as THREE from 'three';
 
 export default class CameraControlsController {
     #camera: THREE.PerspectiveCamera;
-    #attached: boolean;
+    #attached: boolean = false;
     #onMouseMove: (e: MouseEvent) => void;
     #cameraEuler: THREE.Euler;
-    #sensitivity: number = 10;
+    #sensitivity: number = 50;
 
     constructor(
         camera: THREE.PerspectiveCamera
@@ -23,26 +23,26 @@ export default class CameraControlsController {
     /**
      * Set camera controls sensitivity.
      *
-     * @param sensitivity - Minimum value is 1 and maximum is 100. Default values is 10.
+     * @param number - Minimum value is 1 and maximum is 100. Default values is 50.
      *
      * @returns Returns false if range is not respected.
      */
-    setSensitivity(sensitivity: number): boolean {
-        if (sensitivity < 1 || sensitivity > 100) {
+    setSensitivity(number: number): boolean {
+        if (number < 1 || number > 100) {
             return false;
         }
 
-        this.#sensitivity = sensitivity;
+        this.#sensitivity = number;
         return true;
     }
 
     /**
-     * Attaches camera's calculation to `mousemove` event.
+     * Attaches camera calculation to input events.
      */
     attach() {
         this.#attached = true;
         document.addEventListener("mousemove", this.#onMouseMove, false);
-        console.log("INFO::Camera controls attached.");
+        console.info("Camera controls attached.");
     }
 
     /**
@@ -51,7 +51,7 @@ export default class CameraControlsController {
     deattach() {
         this.#attached = false;
         document.removeEventListener("mousemove", this.#onMouseMove, false);
-        console.log("INFO::Camera controls deattached.");
+        console.info("Camera controls deattached.");
     }
 
     /**
@@ -77,6 +77,8 @@ export default class CameraControlsController {
      * Should usually called during game ticks.
      */
     update() {
+        if (!this.#attached) return;
+
         this.#camera.setRotationFromEuler(this.#cameraEuler);
     }
 }

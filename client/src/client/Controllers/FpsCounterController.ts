@@ -29,7 +29,7 @@ export default class FpsCounterController {
      *
      * @returns {void}
      */
-    calculate(delta: number): void {
+    update(delta: number): void {
         const fps = 1 / delta;
         this.#fpsSamples.push(fps);
 

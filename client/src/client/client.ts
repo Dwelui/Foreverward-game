@@ -3,6 +3,7 @@ import RendererController from './Controllers/RendererController.ts';
 import FpsCounterController from './Controllers/FpsCounterController.ts';
 import CameraControlsController from './Controllers/CameraControlsController.ts';
 import SampleStaticScene from './Samples/SampleStaticScene.ts';
+import MovementControlsController from './Controllers/MovementControlsController.ts';
 
 const canvas = document.querySelector('#main-canvas');
 if (!(canvas instanceof HTMLCanvasElement)) {
@@ -28,20 +29,24 @@ document.addEventListener("pointerlockchange", pointerLockChangeHandle, true);
  ********************************************************/
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const cameraControlsIntance = new CameraControlsController(camera);
-cameraControlsIntance.setSensitivity(10);
+const cameraControlsInstance = new CameraControlsController(camera);
+
+const movementControlsInstance = new MovementControlsController(camera);
+movementControlsInstance.setSpeed(20);
 
 function pointerLockChangeHandle() {
     if (document.pointerLockElement === canvas) {
-        cameraControlsIntance.attach();
+        cameraControlsInstance.attach();
+        movementControlsInstance.attach();
     } else {
-        cameraControlsIntance.deattach();
+        cameraControlsInstance.deattach();
+        movementControlsInstance.deattach();
     }
 }
 
 const scene = new THREE.Scene();
 const rendererInstance = new RendererController(canvas, camera, scene);
-rendererInstance.setTargetFps(160);
+rendererInstance.setTargetFps(60);
 
 new SampleStaticScene(scene);
 
@@ -49,9 +54,10 @@ camera.position.z = 5;
 
 const fpsCounterInstance = new FpsCounterController();
 const gameLoop = (delta: number) => {
-    fpsCounterInstance.calculate(delta);
+    fpsCounterInstance.update(delta); // TODO: should rename to update
 
-    cameraControlsIntance.update(); // INFO: might want to move camera update to browser update time.
+    cameraControlsInstance.update();
+    movementControlsInstance.update(delta);
 };
 
 rendererInstance.setAnimationLoop(gameLoop);
